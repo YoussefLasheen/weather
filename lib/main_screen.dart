@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:http/http.dart';
 import 'package:weather/api.dart';
 import 'package:weather/components/search.dart';
 import 'package:weather/models/city_model.dart';
@@ -24,12 +25,8 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     selectedCity = widget.city;
 
-    futureData = Future.wait(
-      [
-        fetchWeatherByCity(selectedCity!),
-        fetchForecastByCity(selectedCity!),
-      ],
-    );
+    futureData = getForcast(selectedCity!);
+
     super.initState();
   }
 
@@ -52,6 +49,7 @@ class _MainScreenState extends State<MainScreen> {
                       latitude: city.lat,
                       longitude: city.lon,
                     );
+                    futureData = getForcast(selectedCity!);
                   });
                 }
               },
@@ -62,12 +60,7 @@ class _MainScreenState extends State<MainScreen> {
         body: RefreshIndicator(
           onRefresh: () async {
             setState(() {
-              futureData = Future.wait(
-                [
-                  fetchWeatherByCity(selectedCity!),
-                  fetchForecastByCity(selectedCity!),
-                ],
-              );
+              futureData = getForcast(selectedCity!);
             });
           },
           child: FutureBuilder<List>(
@@ -103,4 +96,13 @@ class _MainScreenState extends State<MainScreen> {
       ),
     );
   }
+}
+
+Future<List> getForcast(LatLng selectedCity) {
+  return Future.wait(
+    [
+      fetchWeatherByCity(selectedCity),
+      fetchForecastByCity(selectedCity),
+    ],
+  );
 }
