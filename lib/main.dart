@@ -38,13 +38,16 @@ class MainApp extends StatelessWidget {
             log(snapshot.error.toString());
             return const SelectCityScreen();
           }
-          return const Column(
-            children: [
-              Text('Initialising...'),
-              Center(
-                child: CircularProgressIndicator(),
-              ),
-            ],
+          return const Material(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Initialising...'),
+                Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ],
+            ),
           );
         },
       ),
