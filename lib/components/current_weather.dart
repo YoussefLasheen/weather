@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:weather/api.dart';
 import 'package:weather/models/city_model.dart';
@@ -53,11 +54,11 @@ class CurrentWeatherSection extends StatelessWidget {
             ),
             Expanded(
               flex: 2,
-              child: SizedBox.square(
-                child: Image.network(
-                  'https://openweathermap.org/img/wn/${entry.weather.icon}@4x.png',
-                  fit: BoxFit.cover,
-                ),
+              child: CachedNetworkImage(
+                imageUrl:
+                    'https://openweathermap.org/img/wn/${entry.weather.icon}@4x.png',
+                fit: BoxFit.cover,
+                height: 250,
               ),
             )
           ],
