@@ -4,14 +4,15 @@ import 'package:weather/api.dart';
 import 'package:weather/models/city_model.dart';
 
 class ForcastWeatherSection extends StatelessWidget {
+  final City city;
   const ForcastWeatherSection({
-    super.key,
+    super.key, required this.city,
   });
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<City>(
-      future: fetchForecastByCityId('5391959'),
+    return FutureBuilder<CityForcastData>(
+      future: fetchForecastByCity(city),
       builder: (context, snapshot) {
         if (snapshot.hasData && snapshot.data != null) {
           return Align(

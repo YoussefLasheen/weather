@@ -1,15 +1,38 @@
 class City {
+  final String name;
+  final String country;
+  final double lat;
+  final double lon;
+
+  City(
+      {required this.name,
+      required this.country,
+      required this.lat,
+      required this.lon});
+
+  factory City.fromJson(Map<String, dynamic> json) {
+    return City(
+      name: json['name'],
+      country: json['country'],
+      lat: json['lat'],
+      lon: json['lon'],
+    );
+  }
+  get fullName => '$name, $country';
+}
+
+class CityForcastData {
   final List<Day> days;
-  City({
+  CityForcastData({
     required this.days,
   });
 
-  factory City.fromJson(Map<String, dynamic> json) {
+  factory CityForcastData.fromJson(Map<String, dynamic> json) {
     List<Entry> days =
         List.from(json['list']).map((e) => Entry.fromJson(e)).toList();
 
     //Group by day
-    return City(
+    return CityForcastData(
         days: days
             .fold<Map<DateTime, List<Entry>>>({}, (map, entry) {
               DateTime date =

@@ -3,14 +3,16 @@ import 'package:weather/api.dart';
 import 'package:weather/models/city_model.dart';
 
 class CurrentWeatherSection extends StatelessWidget {
+  final City city;
   const CurrentWeatherSection({
     super.key,
+    required this.city,
   });
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Entry>(
-      future: fetchWeatherByCityId('5391959'),
+      future: fetchWeatherByCity(city),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           Entry entry = snapshot.data!;
@@ -24,7 +26,7 @@ class CurrentWeatherSection extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          'San Francisco',
+                          city.name,
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w500,
@@ -42,7 +44,8 @@ class CurrentWeatherSection extends StatelessWidget {
                           ),
                         ),
                         Chip(
-                          label: Text(entry.weather.description),
+                          label:
+                              FittedBox(child: Text(entry.weather.description)),
                           labelStyle: const TextStyle(
                             fontWeight: FontWeight.w400,
                           ),
