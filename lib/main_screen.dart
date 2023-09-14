@@ -18,10 +18,18 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   LatLng? selectedCity;
+  late Future<List> futureData;
 
   @override
   void initState() {
     selectedCity = widget.city;
+
+    futureData = Future.wait(
+      [
+        fetchWeatherByCity(selectedCity!),
+        fetchForecastByCity(selectedCity!),
+      ],
+    );
     super.initState();
   }
 
@@ -51,38 +59,46 @@ class _MainScreenState extends State<MainScreen> {
             )
           ],
         ),
-        body: FutureBuilder<List>(
-          future: Future.wait(
-            [
-              fetchWeatherByCity(selectedCity!),
-              fetchForecastByCity(selectedCity!),
-            ],
-          ),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              Entry entry = snapshot.data!.first;
-              CityForcastData cityForcastData = snapshot.data!.last;
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      CurrentWeatherSection(
-                        entry: entry,
-                      ),
-                      const SizedBox(height: 42),
-                      ForcastWeatherSection(
-                        cityForcastData: cityForcastData,
-                      )
-                    ],
-                  ),
-                ),
+        body: RefreshIndicator(
+          onRefresh: () async {
+            setState(() {
+              futureData = Future.wait(
+                [
+                  fetchWeatherByCity(selectedCity!),
+                  fetchForecastByCity(selectedCity!),
+                ],
               );
-            }
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            });
           },
+          child: FutureBuilder<List>(
+            future: futureData,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                Entry entry = snapshot.data!.first;
+                CityForcastData cityForcastData = snapshot.data!.last;
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    child: Column(
+                      children: [
+                        CurrentWeatherSection(
+                          entry: entry,
+                        ),
+                        const SizedBox(height: 42),
+                        ForcastWeatherSection(
+                          cityForcastData: cityForcastData,
+                        )
+                      ],
+                    ),
+                  ),
+                );
+              }
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            },
+          ),
         ),
       ),
     );
