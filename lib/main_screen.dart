@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:weather/api.dart';
 import 'package:weather/components/search.dart';
 import 'package:weather/models/city_model.dart';
 import 'package:weather/models/latlang.dart';
@@ -29,6 +30,7 @@ class _MainScreenState extends State<MainScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
+          title: Text('Weather App'),
           actions: [
             IconButton(
               onPressed: () async {
@@ -49,21 +51,38 @@ class _MainScreenState extends State<MainScreen> {
             )
           ],
         ),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                CurrentWeatherSection(
-                  city: selectedCity!,
-                ),
-                const SizedBox(height: 42),
-                ForcastWeatherSection(
-                  city: selectedCity!,
-                )
-              ],
-            ),
+        body: FutureBuilder<List>(
+          future: Future.wait(
+            [
+              fetchWeatherByCity(selectedCity!),
+              fetchForecastByCity(selectedCity!),
+            ],
           ),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              Entry entry = snapshot.data!.first;
+              CityForcastData cityForcastData = snapshot.data!.last;
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      CurrentWeatherSection(
+                        entry: entry,
+                      ),
+                      const SizedBox(height: 42),
+                      ForcastWeatherSection(
+                        cityForcastData: cityForcastData,
+                      )
+                    ],
+                  ),
+                ),
+              );
+            }
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          },
         ),
       ),
     );

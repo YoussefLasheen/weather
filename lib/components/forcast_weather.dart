@@ -5,18 +5,14 @@ import 'package:weather/models/city_model.dart';
 import 'package:weather/models/latlang.dart';
 
 class ForcastWeatherSection extends StatelessWidget {
-  final LatLng city;
+  final CityForcastData cityForcastData;
   const ForcastWeatherSection({
-    super.key, required this.city,
+    super.key, required this.cityForcastData,
   });
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<CityForcastData>(
-      future: fetchForecastByCity(city),
-      builder: (context, snapshot) {
-        if (snapshot.hasData && snapshot.data != null) {
-          return Align(
+    return Align(
             alignment: Alignment.centerLeft,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -31,12 +27,12 @@ class ForcastWeatherSection extends StatelessWidget {
                   height: 100,
                   child: ListView.separated(
                     shrinkWrap: true,
-                    itemCount: snapshot.data!.days.first.entries.length,
+                    itemCount: cityForcastData.days.first.entries.length,
                     scrollDirection: Axis.horizontal,
                     separatorBuilder: (context, index) =>
                         const SizedBox(width: 32),
                     itemBuilder: (context, index) {
-                      Entry day = snapshot.data!.days.first.entries[index];
+                      Entry day = cityForcastData!.days.first.entries[index];
                       return Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -66,9 +62,9 @@ class ForcastWeatherSection extends StatelessWidget {
                 ListView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  itemCount: snapshot.data!.days.length - 1,
+                  itemCount: cityForcastData!.days.length - 1,
                   itemBuilder: (context, index) {
-                    Entry day = snapshot.data!.days[index + 1].entries.first;
+                    Entry day = cityForcastData!.days[index + 1].entries.first;
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -98,11 +94,5 @@ class ForcastWeatherSection extends StatelessWidget {
               ],
             ),
           );
-        } else if (snapshot.hasError) {
-          return Text('${snapshot.error}');
-        }
-        return const CircularProgressIndicator();
-      },
-    );
   }
 }
