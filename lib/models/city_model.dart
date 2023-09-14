@@ -68,12 +68,14 @@ class Day {
 
 class Entry {
   Entry({
+    required this.name,
     required this.date,
     required this.weather,
     required this.main,
     required this.wind,
     required this.clouds,
   });
+  late final String? name;
   late final DateTime date;
   late final Weather weather;
   late final Main? main;
@@ -81,6 +83,7 @@ class Entry {
   late final String? clouds;
 
   Entry.fromJson(Map<String, dynamic> json) {
+    name = json['name'];
     date = DateTime.fromMillisecondsSinceEpoch(json['dt'] * 1000);
     weather = Weather.fromJson(json['weather'].first);
     main = Main.fromJson(json['main']);

@@ -1,20 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:weather/components/search.dart';
 import 'package:weather/models/city_model.dart';
+import 'package:weather/models/latlang.dart';
 
 import 'components/current_weather.dart';
 import 'components/forcast_weather.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+  final LatLng city;
+  const MainScreen({super.key, required this.city});
 
   @override
   State<MainScreen> createState() => _MainScreenState();
 }
 
 class _MainScreenState extends State<MainScreen> {
-  City selectedCity =
-      City(name: 'Cairo', country: 'Egypt', lat: 51.5085, lon: -0.1257);
+  LatLng? selectedCity;
+
+  @override
+  void initState() {
+    selectedCity = widget.city;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -29,7 +38,10 @@ class _MainScreenState extends State<MainScreen> {
                 );
                 if (city != null) {
                   setState(() {
-                    selectedCity = city;
+                    selectedCity = LatLng(
+                      latitude: city.lat,
+                      longitude: city.lon,
+                    );
                   });
                 }
               },
@@ -43,11 +55,11 @@ class _MainScreenState extends State<MainScreen> {
             child: Column(
               children: [
                 CurrentWeatherSection(
-                  city: selectedCity,
+                  city: selectedCity!,
                 ),
                 const SizedBox(height: 42),
                 ForcastWeatherSection(
-                  city: selectedCity,
+                  city: selectedCity!,
                 )
               ],
             ),

@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather/api.dart';
 import 'package:weather/models/city_model.dart';
+import 'package:weather/models/latlang.dart';
 
 class CitySearchDelegate extends SearchDelegate<City?> {
   @override
@@ -47,6 +51,14 @@ class CitySearchDelegate extends SearchDelegate<City?> {
               return ListTile(
                 title: Text(snapshot.data![index].fullName),
                 onTap: () {
+                  SharedPreferences.getInstance().then((prefs) {
+                    prefs.setString(
+                        'selectedLocation',
+                        jsonEncode(LatLng(
+                          latitude: snapshot.data![index].lat,
+                          longitude: snapshot.data![index].lon,
+                        ).toJson()));
+                  });
                   close(context, snapshot.data![index]);
                 },
               );

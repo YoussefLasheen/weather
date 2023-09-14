@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:weather/api.dart';
 import 'package:weather/models/city_model.dart';
+import 'package:weather/models/latlang.dart';
 
 class CurrentWeatherSection extends StatelessWidget {
-  final City city;
+  final LatLng city;
   const CurrentWeatherSection({
     super.key,
     required this.city,
@@ -26,7 +27,7 @@ class CurrentWeatherSection extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          city.name,
+                          snapshot.data!.name!,
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w500,

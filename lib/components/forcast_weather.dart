@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:weather/api.dart';
 import 'package:weather/models/city_model.dart';
+import 'package:weather/models/latlang.dart';
 
 class ForcastWeatherSection extends StatelessWidget {
-  final City city;
+  final LatLng city;
   const ForcastWeatherSection({
     super.key, required this.city,
   });

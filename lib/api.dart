@@ -1,14 +1,15 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:weather/models/latlang.dart';
 
 import 'api_constants.dart';
 import 'models/city_model.dart';
 
-Future<CityForcastData> fetchForecastByCity(City city) async {
+Future<CityForcastData> fetchForecastByCity(LatLng city) async {
   Map<String, String> params = {
-    'lat': city.lat.toString(),
-    'lon': city.lon.toString(),
+    'lat': city.latitude.toString(),
+    'lon': city.longitude.toString(),
     'appid': ApiConstants.apiKey,
     'units': 'metric'
   };
@@ -21,14 +22,14 @@ Future<CityForcastData> fetchForecastByCity(City city) async {
     return model;
   } else {
     throw Exception(
-        'Failed to load city weather forecast for id: ${city.name}');
+        'Failed to load city weather forecast');
   }
 }
 
-Future<Entry> fetchWeatherByCity(City city) async {
+Future<Entry> fetchWeatherByCity(LatLng city) async {
   Map<String, String> params = {
-    'lat': city.lat.toString(),
-    'lon': city.lon.toString(),
+    'lat': city.latitude.toString(),
+    'lon': city.longitude.toString(),
     'appid': ApiConstants.apiKey,
     'units': 'metric'
   };
@@ -40,7 +41,7 @@ Future<Entry> fetchWeatherByCity(City city) async {
     return model;
   } else {
     throw Exception(
-        'Failed to load city weather forecast for id: ${city.name}}');
+        'Failed to load city weather forecast');
   }
 }
 
