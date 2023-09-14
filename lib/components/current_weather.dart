@@ -22,20 +22,25 @@ class CurrentWeatherSection extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
-                    entry.name!,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
-                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      entry.name!,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                        color: Theme.of(context).colorScheme.onPrimaryContainer,
+                      ),
+                      maxLines: 1,
                     ),
-                    maxLines: 1,
                   ),
-                  Text(
-                    entry.main!.temp,
-                    style: const TextStyle(
-                      fontSize: 72,
-                      fontWeight: FontWeight.w400,
+                  FittedBox(
+                    child: Text(
+                      entry.main!.temp,
+                      style: const TextStyle(
+                        fontSize: 72,
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
                   ),
                   Chip(
